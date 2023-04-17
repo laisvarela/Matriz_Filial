@@ -1,24 +1,24 @@
 package empresa;
 
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.JSONException;
+import org.json.JSONObject;
 
-public class Window extends javax.swing.JFrame {
+public class Window extends javax.swing.JFrame implements Runnable {
 
-    Client client;
+    final Client client;
 
-    public Window() throws JSONException, UnknownHostException, SocketException {
+    public Window(Client client) throws JSONException, UnknownHostException, SocketException {
         initComponents();
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
         this.pack();
-        //pn_table.setVisible(false);
-        //this.pack();
-        InetAddress ip = InetAddress.getByName("127.0.0.1");
-        client = new Client(ip, 23567);
+        this.client = client;
+        client.start();
     }
 
     @SuppressWarnings("unchecked")
@@ -33,12 +33,11 @@ public class Window extends javax.swing.JFrame {
         lb_status = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
-        jButton1 = new javax.swing.JButton();
-        pn_table = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable_status = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        txt_status = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -86,7 +85,7 @@ public class Window extends javax.swing.JFrame {
                 .addGroup(pn_checkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lb_local)
                     .addComponent(lb_status))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pn_checkLayout.setVerticalGroup(
             pn_checkLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -95,45 +94,45 @@ public class Window extends javax.swing.JFrame {
                 .addComponent(lb_local)
                 .addGap(18, 18, 18)
                 .addComponent(lb_status)
-                .addContainerGap(16, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jSeparator1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED, java.awt.Color.darkGray, java.awt.Color.black, java.awt.Color.white, java.awt.Color.white));
 
         jSeparator2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED, java.awt.Color.black, java.awt.Color.black, java.awt.Color.white, java.awt.Color.white));
 
-        jButton1.setBackground(new java.awt.Color(255, 255, 255));
-        jButton1.setFont(new java.awt.Font("Yu Gothic UI", 0, 12)); // NOI18N
-        jButton1.setText("Status complete");
+        txt_status.setColumns(20);
+        txt_status.setFont(new java.awt.Font("Yu Gothic UI", 0, 12)); // NOI18N
+        txt_status.setRows(5);
+        txt_status.setDisabledTextColor(new java.awt.Color(0, 0, 0));
+        txt_status.setEnabled(false);
+        jScrollPane2.setViewportView(txt_status);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(76, 76, 76)
-                .addComponent(pn_check, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(14, 14, 14)
-                                .addComponent(cb_local, javax.swing.GroupLayout.PREFERRED_SIZE, 204, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(bt_onoff))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 277, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(14, 14, 14)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(cb_local, 0, 204, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(bt_onoff))
+                                    .addComponent(pn_check, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(jButton1)))))
+                            .addComponent(jScrollPane2))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -147,53 +146,11 @@ public class Window extends javax.swing.JFrame {
                     .addComponent(bt_onoff))
                 .addGap(18, 18, 18)
                 .addComponent(pn_check, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1)
-                .addGap(11, 11, 11))
-        );
-
-        jTable_status.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-                "Local", "Status"
-            }
-        ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class
-            };
-            boolean[] canEdit = new boolean [] {
-                false, false
-            };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
-
-            public boolean isCellEditable(int rowIndex, int columnIndex) {
-                return canEdit [columnIndex];
-            }
-        });
-        jScrollPane1.setViewportView(jTable_status);
-
-        javax.swing.GroupLayout pn_tableLayout = new javax.swing.GroupLayout(pn_table);
-        pn_table.setLayout(pn_tableLayout);
-        pn_tableLayout.setHorizontalGroup(
-            pn_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_tableLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
-        );
-        pn_tableLayout.setVerticalGroup(
-            pn_tableLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pn_tableLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -201,37 +158,35 @@ public class Window extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 5, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(pn_table, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(pn_table, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void bt_onoffMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_bt_onoffMouseClicked
-        lb_local.setText((String) cb_local.getSelectedItem());
         if (bt_onoff.isSelected()) {
-            bt_onoff.setText("On");
-            lb_status.setText("On");
-        } else {
-            bt_onoff.setText("Off");
-            lb_status.setText("Off");
+            if (bt_onoff.getText().equals("On")) {
+                bt_onoff.setText("Off");
+                lb_status.setText("Off");
+            } else {
+                bt_onoff.setText("On");
+                lb_status.setText("On");
+            }
+            bt_onoff.setSelected(false);
         }
         try {
             try {
-                client.sendMsg("set", cb_local.getSelectedItem().toString(), bt_onoff.getText());
+                client.serverMsg("set", cb_local.getSelectedItem().toString(), bt_onoff.getText());
             } catch (SocketException | JSONException ex) {
                 System.out.println("aqui");
                 Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
@@ -242,33 +197,45 @@ public class Window extends javax.swing.JFrame {
     }//GEN-LAST:event_bt_onoffMouseClicked
 
     private void cb_localActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_localActionPerformed
-
         try {
-            lb_local.setText(client.getjObj().get("locate").toString());
-            lb_status.setText(client.getjObj().get("value").toString());
-        } catch (JSONException ex) {
+            JSONObject jGet = client.serverMsg("get", cb_local.getSelectedItem().toString(), null);
+            lb_local.setText(jGet.get("locate").toString());
+            lb_status.setText(jGet.get("value").toString());
+            bt_onoff.setText(jGet.get("value").toString());
+        } catch (JSONException | IOException ex) {
             Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_cb_localActionPerformed
 
+    @Override
+    public void run() {
+        try {
+            if (client.getjObj().get("command").equals("status")) {
+                txt_status.setText(client.getjObj().get("status").toString().replace("{", "").replace("},", "\n\n").
+                        replace("command", "").replace("status", "").replace("]", "").replace("[", "").
+                        replace("value", "status").replace(",", "\t").replace("}", ""));
+            }
+
+        } catch (JSONException ex) {
+            Logger.getLogger(Window.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public static void main(String args[]) throws UnknownHostException, SocketException, IOException, JSONException {
-        Window w = new Window();
-        w.setVisible(true);
-        w.setLocationRelativeTo(null);
+        Client client = new Client();
 
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton bt_onoff;
     private javax.swing.JComboBox<String> cb_local;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JTable jTable_status;
     private javax.swing.JLabel lb_local;
     private javax.swing.JLabel lb_status;
     private javax.swing.JPanel pn_check;
-    private javax.swing.JPanel pn_table;
+    private javax.swing.JTextArea txt_status;
     // End of variables declaration//GEN-END:variables
+
 }
